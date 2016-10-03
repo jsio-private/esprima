@@ -296,9 +296,9 @@ describe('esprima.parse delegate', function () {
         esprima.parse('/* prolog */ answer = 42 // epilog', { comment: true }, collect);
 
         assert.deepEqual(list.length, 7);
-        assert.deepEqual(list[0], { type: 'BlockComment', value: ' prolog ' });
+        assert.deepEqual(list[0], { type: 'BlockComment', value: ' prolog ', sameLine: true });
         assert.deepEqual(list[1], { type: 'Identifier', name: 'answer' });
-        assert.deepEqual(list[2], { type: 'LineComment', value: ' epilog' });
+        assert.deepEqual(list[2], { type: 'LineComment', value: ' epilog', sameLine: true });
         assert.deepEqual(list[3], { type: 'Literal', value: 42, raw: '42' });
         assert.deepEqual(list[4].type, 'AssignmentExpression');
         assert.deepEqual(list[5].type, 'ExpressionStatement');
@@ -446,7 +446,7 @@ describe('esprima.parse delegate', function () {
         // Only the first one will have `annotation` since there is
         // a line comment in the same line.
         assert.deepEqual(tree.body.length, 2);
-        assert.deepEqual(tree.body[0].annotation, { type: 'LineComment', value: ' answer' });
+        assert.deepEqual(tree.body[0].annotation, { type: 'LineComment', value: ' answer', sameLine: true });
         assert.deepEqual(tree.body[1].annotation, undefined);
     });
 

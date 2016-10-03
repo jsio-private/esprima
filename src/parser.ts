@@ -257,7 +257,7 @@ export class Parser {
                         node.loc = e.loc;
                     }
                     // TODO: works as long as comment is not tailing last top level node in program
-                    node.tailingToStatement = e.loc.start.line === this.lastMarker.lineNumber;
+                    node.sameLine = e.loc.start.line === this.lastMarker.lineNumber;
                     const metadata = {
                         start: {
                             line: e.loc.start.line,
@@ -429,7 +429,7 @@ export class Parser {
                 node.trailingComments.forEach(c => {
                     let start: number = c.loc.start.line;
                     let end: number = c.loc.end.line;
-                    for (let i: number = start; i <= end; i++){
+                    for (let i: number = start; i <= end; i++) {
                         if (trailingCommentLines.indexOf(i) < 0) {
                             trailingCommentLines.push(i);
                         }
