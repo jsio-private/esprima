@@ -256,6 +256,8 @@ export class Parser {
                     if (this.config.loc) {
                         node.loc = e.loc;
                     }
+                    // TODO: works as long as comment is not tailing last top level node in program
+                    node.tailingToStatement = e.loc.start.line === this.lastMarker.lineNumber;
                     const metadata = {
                         start: {
                             line: e.loc.start.line,
