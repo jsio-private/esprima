@@ -15,6 +15,7 @@ interface Config {
     tokens: boolean;
     comment: boolean;
     tolerant: boolean;
+    padding: boolean;
 }
 
 interface Context {
@@ -76,7 +77,8 @@ export class Parser {
             source: null,
             tokens: (typeof options.tokens === 'boolean') && options.tokens,
             comment: (typeof options.comment === 'boolean') && options.comment,
-            tolerant: (typeof options.tolerant === 'boolean') && options.tolerant
+            tolerant: (typeof options.tolerant === 'boolean') && options.tolerant,
+            padding: (typeof options.padding === 'boolean') && options.padding
         };
         if (this.config.loc && options.source && options.source !== null) {
             this.config.source = String(options.source);
@@ -408,6 +410,16 @@ export class Parser {
                 }
             };
             this.delegate(node, metadata);
+        }
+
+        if (this.config.padding) {
+            node.padding = {
+                top: 0,
+                bottom: 0
+            };
+            if (this.hasLineTerminator) {
+                node.padding.bottom = Math.max(this.lookahead.lineNumber - node.loc.end.line - 1, 0);
+            }
         }
 
         return node;
