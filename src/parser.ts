@@ -417,8 +417,31 @@ export class Parser {
                 top: 0,
                 bottom: 0
             };
+            // Does not account for commment lines (they are counted as blank)
             if (this.hasLineTerminator) {
                 node.padding.bottom = Math.max(this.lookahead.lineNumber - node.loc.end.line - 1, 0);
+            }
+            // Adjust for comments
+            if (node.trailingComments) {
+                const trailingCommentLines: number[] = [];
+                node.trailingComments.forEach(c => {
+                    let start: number = c.loc.start.line;
+                    let end: number = c.loc.end.line;
+                    for (let i: number = start; i <= end; i++){
+                        if (trailingCommentLines.indexOf(i) < 0) {
+                            trailingCommentLines.push(i);
+                        }
+                    }
+                });
+                const endOfNode = node.loc.end.line;
+                const endOfPadding = endOfNode + node.padding.bottom;
+                trailingCommentLines.forEach(lineNumber => {
+                    if (lineNumber > endOfNode && lineNumber <= endOfPadding) {
+                        node.padding.bottom--;
+                    }
+                });
+                // Ensure it hasnt gone < 0 somehow
+                node.padding.bottom = Math.max(node.padding.bottom, 0);
             }
         }
 
